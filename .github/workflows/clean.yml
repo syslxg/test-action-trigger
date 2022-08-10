@@ -1,0 +1,28 @@
+name: Clean
+
+on:
+  pull_request:
+    types: [closed]
+
+
+jobs:
+  detect:
+    container:
+      image: gcr.io/tas-ppe/monorepo
+    defaults:
+      run:
+        shell: bash
+    runs-on:
+      - ubuntu
+    outputs:
+      event_id: ${{ steps.compute_event_id.outputs.event_id }}
+    
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.RELEEN_GITHUB_PAT }}
+
+#      - if: ${{ github.event_name == 'workflow_dispatch' }}
+      - id: compute_event_id
+        name: Compute event id
+        run: .github/tasks/test.sh
